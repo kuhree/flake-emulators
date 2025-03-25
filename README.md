@@ -58,7 +58,7 @@ Whether you’re reliving classics like *Midnight Club* or testing Android apps,
 
 ### General Setup
 - Place ROMs in a directory (e.g., `~/roms/`) for easy access.
-- Connect a gamepad (Xbox/PS) via USB/Bluetooth—NixOS detects them automatically.
+- Connect a gamepad (Xbox/PS) via USB/Bluetooth
 
 ### Emulator-Specific Setup
 - **PPSSPP**: No extra setup; load ROMs via GUI.
