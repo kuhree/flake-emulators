@@ -57,7 +57,6 @@
           '';
         };
 
-        # Android SDK with emulator support
         android-sdk = pkgs.androidenv.composeAndroidPackages {
           includeEmulator = true; # Enables the emulator
           platformVersions = [ "33" ]; # Android 13, adjust as needed
@@ -68,7 +67,6 @@
           cmdLineToolsVersion = "8.0"; # For avdmanager
         };
 
-        # Android emulator package with AVD creation and launch script
         android-canary = pkgs.stdenv.mkDerivation {
           pname = "android-canary";
           version = "2025-03-23";
@@ -85,7 +83,6 @@
 						 export ANDROID_SDK_ROOT=${android-sdk.androidsdk}/libexec/android-sdk
 						 export PATH=\$ANDROID_SDK_ROOT/emulator:\$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:\$ANDROID_SDK_ROOT/platform-tools:\$PATH
 
-						 # Create AVD if it doesn’t exist
 						 if ! avdmanager list avd | grep -q "pixel_7"; then
 							echo "Creating AVD 'pixel_7'..."
 							avdmanager create avd --force --name pixel_7 --package "system-images;android-33;google_apis;x86_64" --device "pixel_7"
@@ -94,7 +91,6 @@
 							fi
 						 fi
 
-						 # Launch the emulator
 						 emulator -avd pixel_7 -no-snapshot-save -gpu host "\$@"
 						 EOF
 						 chmod +x $out/bin/android-emulator
