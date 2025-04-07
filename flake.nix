@@ -104,7 +104,7 @@
         # PSP emulator
         ppsspp = {
           type = "app";
-          program = "${pkgs.ppsspp}/bin/ppsspp-qt";
+          program = "${pkgs.ppsspp}/bin/ppsspp";
         };
 
         # PS2 emulator
