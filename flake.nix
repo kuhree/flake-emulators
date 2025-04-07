@@ -28,7 +28,7 @@
         };
         src = pkgs.fetchurl {
           url = "https://github.com/xenia-canary/xenia-canary-releases/releases/latest/download/xenia_canary_linux.tar.gz";
-          sha256 = "sha256-NYZeWbOyincP7jwexfgtjHiVna36vlvKl22XJ+d2G8k=";
+          sha256 = "sha256-cCAiVDdD3yL+wmadm/iPQJatRWPwd3ehQCLq/TWHUEA=";
         };
         nativeBuildInputs = [pkgs.gnutar pkgs.makeWrapper];
         unpackPhase = ''
