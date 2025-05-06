@@ -1,0 +1,49 @@
+name: nix flake ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: cachix/install-nix-action@v25
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+
+      - name: nix flake check
+        run: nix flake check
+
+      - name: check formatting with alejandra
+        run: nix run nixpkgs#alejandra -- --check .
+
+      - name: lint with nil
+        run: find . -type f -wholename "**.nix" | xargs -I {} nix run 'nixpkgs#nil' -- diagnostics {}
+
+      - name: notify status
+        if: always()
+        run: |
+          STATUS_EMOJI="${{ job.status == 'success' && '✅' || '❌' }}"
+          STATUS_TEXT="${{ job.status == 'success' && 'white_checkmark' || 'x' }}"
+
+          curl \
+            -H "Authorization: Bearer ${{ secrets.NTFY_API_TOKEN }}" \
+            -H "Title: Nix Flake CI: $STATUS_EMOJI" \
+            -H "Tags: snowflake,ci,${STATUS_TEXT}" \
+            -H "Priority: ${{ job.status == 'success' && '3' || '5' }}" \
+            -H "Click: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+            -H "Markdown: yes" \
+            -d "### CI Details
+            - **Repository**: \`${{ github.repository }}\`
+            - **Branch/Tag**: \`${{ github.ref_name }}\`
+            - **Commit**: [\`${GITHUB_SHA::7}\`](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})
+
+            ${STATUS_EMOJI} CI **${{ job.status }}**
+
+            [View Run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_number }})" \
+            ${{ secrets.NTFY_URL }}
